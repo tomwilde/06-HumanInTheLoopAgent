@@ -1,0 +1,32 @@
+[project]
+name = "human-in-the-loop-agent"
+version = "0.1.0"
+description = "Streamlit Human-in-the-Loop Approval Agent"
+requires-python = ">=3.11"
+dependencies = [
+  "streamlit>=1.40",
+  "openai>=1.54.0",
+  "debugpy>=1.8.0",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3.0",
+  "ruff>=0.8.0",
+  "ty>=0.0.1a14",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+  "acceptance: end-to-end acceptance scenarios",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+

@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    profiles: ["app"]
+    ports:
+      - "8501:8501"
+    environment:
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      USE_LIVE_LLM: ${USE_LIVE_LLM:-false}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openai/gpt-4.1-mini}
+      CONFIDENCE_THRESHOLD: ${CONFIDENCE_THRESHOLD:-0.75}
+      REFUND_LIMIT: ${REFUND_LIMIT:-100}
+      HUMAN_AVAILABLE: ${HUMAN_AVAILABLE:-true}
+      ENABLE_HASH_CHAIN: ${ENABLE_HASH_CHAIN:-false}
+
+  debug:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    profiles: ["debug"]
+    ports:
+      - "8501:8501"
+      - "5678:5678"
+    volumes:
+      - ./:/app
+    environment:
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      USE_LIVE_LLM: ${USE_LIVE_LLM:-false}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openai/gpt-4.1-mini}
+      CONFIDENCE_THRESHOLD: ${CONFIDENCE_THRESHOLD:-0.75}
+      REFUND_LIMIT: ${REFUND_LIMIT:-100}
+      HUMAN_AVAILABLE: ${HUMAN_AVAILABLE:-true}
+      ENABLE_HASH_CHAIN: ${ENABLE_HASH_CHAIN:-false}
+    command:
+      [
+        "python",
+        "-m",
+        "debugpy",
+        "--listen",
+        "0.0.0.0:5678",
+        "-m",
+        "streamlit",
+        "run",
+        "app.py",
+        "--server.port=8501",
+        "--server.address=0.0.0.0",
+      ]
+
